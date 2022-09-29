@@ -1,12 +1,12 @@
 import React from 'react'
-import { Pokemon } from '../types'
+import { useGuess } from '../../../context/GuessContext'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
-interface Props {
-  pokemons: Pokemon[]
-}
+interface Props {}
 
-const DraggableElements: React.FC<Props> = ({ pokemons }) => {
+const DraggableElements: React.FC<Props> = () => {
+  const [{ pokemons }, {}] = useGuess()
+
   return (
     <div className='border-2 border-black flex justify-around gap-2.5 min-h-60 h-60 p-6'>
       {pokemons.map((pokemon) => (

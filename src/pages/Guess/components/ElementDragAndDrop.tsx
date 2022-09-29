@@ -1,9 +1,9 @@
 import React from 'react'
-import { Pokemon } from '../types'
+import { PokemonItem } from '../types'
 
 interface Props {
   onlyName?: boolean
-  pokemon: Pokemon
+  pokemon: PokemonItem
 }
 
 const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
