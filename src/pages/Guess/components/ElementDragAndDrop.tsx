@@ -1,4 +1,5 @@
 import React, { DragEvent, useState } from 'react'
+import { useGuess } from '../../../context/GuessContext'
 import { PokemonItem } from '../types'
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
+  const [{}, { addElementDropped }] = useGuess()
   const [droppedSuccess, setDroppedSuccess] = useState(false)
 
   const handleDragStart = (e: DragEvent<HTMLImageElement>) => {
@@ -24,6 +26,9 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
 
     const draggableElementData = e.dataTransfer.getData('text/plain')
     const isDropSuccess = pokemon.name === draggableElementData
+    if (isDropSuccess) {
+      addElementDropped(pokemon.name)
+    }
     setDroppedSuccess(isDropSuccess)
   }
 

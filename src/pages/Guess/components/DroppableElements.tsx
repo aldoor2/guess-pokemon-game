@@ -1,19 +1,19 @@
 import React from 'react'
-import { useGuess } from '../../../context/GuessContext'
+import { PokemonItem } from '../types'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
-interface Props {}
+interface Props {
+  pokemons: PokemonItem[]
+}
 
-const DroppableElements: React.FC<Props> = () => {
-  const [{ pokemons }, {}] = useGuess()
+let numberRandom = Math.random() - 0.5
 
+const DroppableElements: React.FC<Props> = ({ pokemons }) => {
   return (
-    <div className='flex justify-around gap-2.5 min-h-60 h-60 p-6'>
+    <div className='flex justify-around gap-2.5 h-52 p-6'>
       {pokemons
-        .map((pokemon) => (
-          <ElementDragAndDrop key={pokemon.id} onlyName pokemon={pokemon} />
-        ))
-        .sort(() => Math.random() - 0.5)}
+        .map((p) => <ElementDragAndDrop key={p.id} onlyName pokemon={p} />)
+        .sort(() => numberRandom)}
     </div>
   )
 }
