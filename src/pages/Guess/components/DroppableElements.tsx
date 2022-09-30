@@ -9,6 +9,10 @@ interface Props {
 let numberRandom = Math.random() - 0.5
 
 const DroppableElements: React.FC<Props> = ({ pokemons }) => {
+  React.useEffect(() => {
+    numberRandom = Math.random() - 0.5
+  }, [pokemons])
+
   return (
     <div className='flex justify-around gap-2.5 h-52 p-6'>
       {pokemons

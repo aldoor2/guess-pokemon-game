@@ -4,7 +4,10 @@ import { useGuess } from '../../context/GuessContext'
 import { DraggableElements, DroppableElements } from './components'
 
 function Guess() {
-  const [{ pokemons, score }, { getAllPokemonFirstGeneration }] = useGuess()
+  const [
+    { pokemons, score, isElementDroppedIncorrect },
+    { getAllPokemonFirstGeneration },
+  ] = useGuess()
 
   React.useEffect(() => {
     getAllPokemonFirstGeneration()
@@ -13,8 +16,9 @@ function Guess() {
   return (
     <>
       <h1 className='text-center text-2xl'>Adivina el pokemon!</h1>
+
       {score === pokemons.length && score > 0 ? (
-        <p className='text-white text-lg flex justify-center items-center h-52 p-6'>
+        <p className='text-white text-lg text-center h-40 p-6'>
           Congratulations!!!
         </p>
       ) : (
@@ -23,7 +27,11 @@ function Guess() {
           <DraggableElements pokemons={pokemons} />
         </>
       )}
+
       <h2 className='text-center text-xl'>Arrastra y suelta</h2>
+      {isElementDroppedIncorrect && (
+        <p className='text-white text-lg text-center'>Ups!</p>
+      )}
       <DroppableElements pokemons={pokemons} />
     </>
   )
