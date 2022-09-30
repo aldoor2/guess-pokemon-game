@@ -8,7 +8,7 @@ const DraggableElements: React.FC<Props> = () => {
   const [{ pokemons }, {}] = useGuess()
 
   return (
-    <div className='border-2 border-black flex justify-around gap-2.5 min-h-60 h-60 p-6'>
+    <div className='flex justify-around gap-2.5 min-h-60 h-60 p-6'>
       {pokemons.map((pokemon) => (
         <ElementDragAndDrop key={pokemon.id} pokemon={pokemon} />
       ))}
