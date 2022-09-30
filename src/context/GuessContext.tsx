@@ -9,12 +9,14 @@ interface Context {
   state: {
     pokemons: PokemonItem[]
     score: number
+    isElementDroppedIncorrect: boolean
   }
   actions: {
     getPokemonById: (pokemonId: number | string) => void
     getAllPokemonFirstGeneration: () => void
     addElementDropped: (namePokemon: PokemonItem['name']) => void
     clearElementsDropped: () => void
+    setIsElementDroppedIncorrect: (value: boolean) => void
   }
 }
 
@@ -26,6 +28,8 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     PokemonItem['name'][]
   >([])
   const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(3)
+  const [isElementDroppedIncorrect, setIsElementDroppedIncorrect] =
+    React.useState(false)
 
   // Score of game to Drop successfully
   const score = React.useMemo(() => elementsDropped.length, [elementsDropped])
@@ -89,7 +93,10 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   }, [elementsDropped])
 
   // State global variables
-  const state = React.useMemo(() => ({ pokemons, score }), [pokemons, score])
+  const state = React.useMemo(
+    () => ({ pokemons, score, isElementDroppedIncorrect }),
+    [pokemons, score, isElementDroppedIncorrect]
+  )
 
   // Actions accepted for handle the state
   const actions = React.useMemo(
@@ -98,12 +105,14 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
+      setIsElementDroppedIncorrect,
     }),
     [
       getPokemonById,
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
+      setIsElementDroppedIncorrect,
     ]
   )
 
