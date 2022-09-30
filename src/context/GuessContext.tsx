@@ -8,11 +8,11 @@ type Props = {
 interface Context {
   state: {
     pokemons: PokemonItem[]
-    totalCards: number
   }
   actions: {
-    getPokemonById: (pokemonId: number) => void
+    getPokemonById: (pokemonId: number | string) => void
     getAllPokemonFirstGeneration: () => void
+    changeTotalElementsDraggable: (value: number) => void
   }
 }
 
@@ -20,7 +20,7 @@ const GuessContext = React.createContext({} as Context)
 
 const GuessProvider: React.FC<Props> = ({ children }) => {
   const [pokemons, setPokemons] = React.useState<PokemonItem[]>([])
-  const totalCards = 3
+  const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(3)
 
   const randomId = React.useCallback(
     (max: number) => Math.floor(Math.random() * max) + 1,
@@ -28,7 +28,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   )
 
   const getPokemonById = React.useCallback(
-    async (pokemonId: number) => {
+    async (pokemonId: number | string) => {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
       const data = await res.json()
 
@@ -46,7 +46,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   const getAllPokemonFirstGeneration = React.useCallback(async () => {
     const firstGeneration = 151
     const searchPokemons: PokemonItem[] = []
-    for (let i = 1; i <= totalCards; i++) {
+    for (let i = 1; i <= totalElementsDraggable; i++) {
       const id = randomId(firstGeneration)
       const pokemon = await getPokemonById(id)
       searchPokemons.push(pokemon)
@@ -54,14 +54,20 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     setPokemons([...searchPokemons])
   }, [pokemons])
 
-  const state = React.useMemo(
-    () => ({ pokemons, totalCards }),
-    [pokemons, totalCards]
+  const changeTotalElementsDraggable = React.useCallback(
+    (value: number) => setTotalElementsDraggable(value),
+    [totalElementsDraggable]
   )
 
+  const state = React.useMemo(() => ({ pokemons }), [pokemons])
+
   const actions = React.useMemo(
-    () => ({ getPokemonById, getAllPokemonFirstGeneration }),
-    [randomId, getPokemonById, getAllPokemonFirstGeneration]
+    () => ({
+      getPokemonById,
+      getAllPokemonFirstGeneration,
+      changeTotalElementsDraggable,
+    }),
+    [getPokemonById, getAllPokemonFirstGeneration, changeTotalElementsDraggable]
   )
 
   React.useEffect(() => {
