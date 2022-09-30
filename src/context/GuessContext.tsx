@@ -8,11 +8,13 @@ type Props = {
 interface Context {
   state: {
     pokemons: PokemonItem[]
+    score: number
   }
   actions: {
     getPokemonById: (pokemonId: number | string) => void
     getAllPokemonFirstGeneration: () => void
-    changeTotalElementsDraggable: (value: number) => void
+    addElementDropped: (namePokemon: PokemonItem['name']) => void
+    clearElementsDropped: () => void
   }
 }
 
@@ -20,13 +22,25 @@ const GuessContext = React.createContext({} as Context)
 
 const GuessProvider: React.FC<Props> = ({ children }) => {
   const [pokemons, setPokemons] = React.useState<PokemonItem[]>([])
+  const [elementsDropped, setElementsDropped] = React.useState<
+    PokemonItem['name'][]
+  >([])
   const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(3)
 
+  // Score of game to Drop successfully
+  const score = React.useMemo(() => elementsDropped.length, [elementsDropped])
+
+  /**
+   * Get a random number
+   */
   const randomId = React.useCallback(
     (max: number) => Math.floor(Math.random() * max) + 1,
     []
   )
 
+  /**
+   * Getting a Pokemon by Id or Name
+   */
   const getPokemonById = React.useCallback(
     async (pokemonId: number | string) => {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
@@ -43,6 +57,9 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     [pokemons]
   )
 
+  /**
+   * Gettting All First Generation of Pokemons
+   */
   const getAllPokemonFirstGeneration = React.useCallback(async () => {
     const firstGeneration = 151
     const searchPokemons: PokemonItem[] = []
@@ -54,25 +71,41 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     setPokemons([...searchPokemons])
   }, [pokemons])
 
-  const changeTotalElementsDraggable = React.useCallback(
-    (value: number) => setTotalElementsDraggable(value),
-    [totalElementsDraggable]
+  /**
+   * Add a element dropped
+   */
+  const addElementDropped = React.useCallback(
+    (namePokemon: PokemonItem['name']) => {
+      setElementsDropped([...elementsDropped, namePokemon])
+    },
+    [elementsDropped]
   )
 
-  const state = React.useMemo(() => ({ pokemons }), [pokemons])
+  /**
+   * Clear all elements dropped
+   */
+  const clearElementsDropped = React.useCallback(() => {
+    setElementsDropped([])
+  }, [elementsDropped])
 
+  // State global variables
+  const state = React.useMemo(() => ({ pokemons, score }), [pokemons, score])
+
+  // Actions accepted for handle the state
   const actions = React.useMemo(
     () => ({
       getPokemonById,
       getAllPokemonFirstGeneration,
-      changeTotalElementsDraggable,
+      addElementDropped,
+      clearElementsDropped,
     }),
-    [getPokemonById, getAllPokemonFirstGeneration, changeTotalElementsDraggable]
+    [
+      getPokemonById,
+      getAllPokemonFirstGeneration,
+      addElementDropped,
+      clearElementsDropped,
+    ]
   )
-
-  React.useEffect(() => {
-    getAllPokemonFirstGeneration()
-  }, [])
 
   return (
     <GuessContext.Provider value={{ state, actions }}>
