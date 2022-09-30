@@ -4,14 +4,22 @@ import ElementDragAndDrop from './ElementDragAndDrop'
 
 interface Props {
   pokemons: PokemonItem[]
+  score: number
 }
 
-const DraggableElements: React.FC<Props> = ({ pokemons }) => {
+const DraggableElements: React.FC<Props> = ({ pokemons, score }) => {
   return (
-    <div className='flex justify-around gap-2.5 h-52 p-6'>
-      {pokemons.map((pokemon) => (
-        <ElementDragAndDrop key={pokemon.id} pokemon={pokemon} />
-      ))}
+    <div className='flex flex-wrap justify-around gap-2.5 h-min p-6'>
+      {score === pokemons.length && score > 0 ? (
+        <p className='text-white text-lg text-center mt-16'>Ganaste!!!</p>
+      ) : (
+        <>
+          {/* <p className='text-sm text-white'>{`Score: ${score}`}</p> */}
+          {pokemons.map((pokemon) => (
+            <ElementDragAndDrop key={pokemon.id} pokemon={pokemon} />
+          ))}
+        </>
+      )}
     </div>
   )
 }

@@ -27,7 +27,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   const [elementsDropped, setElementsDropped] = React.useState<
     PokemonItem['name'][]
   >([])
-  const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(3)
+  const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(10)
   const [isElementDroppedIncorrect, setIsElementDroppedIncorrect] =
     React.useState(false)
 

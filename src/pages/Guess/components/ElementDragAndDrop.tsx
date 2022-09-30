@@ -38,7 +38,7 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
   if (onlyName) {
     return (
       <div
-        className={`border-4 border-dashed border-amber-900 w-fit h-24 px-2.5 grid place-content-center`}
+        className={`border-4 border-dashed border-orange-700 w-fit h-24 px-2.5 grid place-content-center`}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >

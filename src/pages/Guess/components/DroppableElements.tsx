@@ -14,7 +14,7 @@ const DroppableElements: React.FC<Props> = ({ pokemons }) => {
   }, [pokemons])
 
   return (
-    <div className='flex justify-around gap-2.5 h-52 p-6'>
+    <div className='flex flex-wrap justify-around gap-2.5 h-min p-6'>
       {pokemons
         .map((p) => <ElementDragAndDrop key={p.id} onlyName pokemon={p} />)
         .sort(() => numberRandom)}
