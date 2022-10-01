@@ -1,17 +1,18 @@
 import React from 'react'
 import { PokemonItem } from '../types'
+import { generateRandomNumber } from '../utils'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
 interface Props {
   pokemons: PokemonItem[]
 }
 
-let numberRandom = Math.random() - 0.5
+let numberRandom = generateRandomNumber()
 
 const DroppableElements: React.FC<Props> = ({ pokemons }) => {
   React.useEffect(() => {
-    numberRandom = Math.random() - 0.5
-  }, [pokemons])
+    numberRandom = generateRandomNumber()
+  }, [])
 
   return (
     <div className='flex flex-wrap justify-around gap-2.5 h-min p-6'>

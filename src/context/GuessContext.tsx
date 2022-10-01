@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { PokemonItem } from '../pages/Guess'
+import {
+  generateRandomPokemonId,
+  getPokemonById,
+  PokemonItem,
+} from '../pages/Guess'
 
 type Props = {
   children: JSX.Element | JSX.Element[]
@@ -12,7 +16,6 @@ interface Context {
     isElementDroppedIncorrect: boolean
   }
   actions: {
-    getPokemonById: (pokemonId: number | string) => void
     getAllPokemonFirstGeneration: () => void
     addElementDropped: (namePokemon: PokemonItem['name']) => void
     clearElementsDropped: () => void
@@ -27,7 +30,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   const [elementsDropped, setElementsDropped] = React.useState<
     PokemonItem['name'][]
   >([])
-  const [totalElementsDraggable, setTotalElementsDraggable] = React.useState(10)
+  const [maxDragAndDropElements, setMaxDragAndDropElements] = React.useState(10)
   const [isElementDroppedIncorrect, setIsElementDroppedIncorrect] =
     React.useState(false)
 
@@ -35,45 +38,27 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   const score = React.useMemo(() => elementsDropped.length, [elementsDropped])
 
   /**
-   * Get a random number
-   */
-  const randomId = React.useCallback(
-    (max: number) => Math.floor(Math.random() * max) + 1,
-    []
-  )
-
-  /**
-   * Getting a Pokemon by Id or Name
-   */
-  const getPokemonById = React.useCallback(
-    async (pokemonId: number | string) => {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
-      const data = await res.json()
-
-      const pokemon: PokemonItem = {
-        id: data.id,
-        name: data.name,
-        image: data.sprites.other['official-artwork'].front_default,
-      }
-
-      return pokemon
-    },
-    [pokemons]
-  )
-
-  /**
    * Gettting All First Generation of Pokemons
    */
   const getAllPokemonFirstGeneration = React.useCallback(async () => {
-    const firstGeneration = 151
     const searchPokemons: PokemonItem[] = []
-    for (let i = 1; i <= totalElementsDraggable; i++) {
-      const id = randomId(firstGeneration)
-      const pokemon = await getPokemonById(id)
+    const pokemonsIdToSearch = new Set<number>()
+
+    // Generate Pokemon IDs uniques to be get the data from api
+    while (pokemonsIdToSearch.size < maxDragAndDropElements) {
+      const pokemonId = generateRandomPokemonId()
+      pokemonsIdToSearch.add(pokemonId)
+    }
+
+    // We get the pokemon data for drag and drop
+    for (const pokemonId of pokemonsIdToSearch) {
+      const pokemon = await getPokemonById(pokemonId)
       searchPokemons.push(pokemon)
     }
+
+    // Modifycate el state global
     setPokemons([...searchPokemons])
-  }, [pokemons])
+  }, [pokemons, maxDragAndDropElements])
 
   /**
    * Add a element dropped
@@ -101,14 +86,12 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   // Actions accepted for handle the state
   const actions = React.useMemo(
     () => ({
-      getPokemonById,
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
       setIsElementDroppedIncorrect,
     }),
     [
-      getPokemonById,
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
