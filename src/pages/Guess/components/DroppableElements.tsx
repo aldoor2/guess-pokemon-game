@@ -1,10 +1,10 @@
 import React from 'react'
-import { PokemonItem } from '../types'
+import { DraggableAndDroppablePokemons } from '../types'
 import { generateRandomNumber } from '../utils'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
 interface Props {
-  pokemons: PokemonItem[]
+  pokemons: DraggableAndDroppablePokemons
 }
 
 let numberRandom = generateRandomNumber()
@@ -16,8 +16,10 @@ const DroppableElements: React.FC<Props> = ({ pokemons }) => {
 
   return (
     <div className='flex flex-wrap justify-around gap-2.5 h-min p-6'>
-      {pokemons
-        .map((p) => <ElementDragAndDrop key={p.id} onlyName pokemon={p} />)
+      {Array.from(pokemons.entries())
+        .map(([id, pokemon]) => (
+          <ElementDragAndDrop key={id} onlyName pokemon={pokemon} />
+        ))
         .sort(() => numberRandom)}
     </div>
   )

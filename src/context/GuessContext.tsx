@@ -1,67 +1,68 @@
 import * as React from 'react'
 import { getPokemonByIdRequest } from '../api'
-import { generateRandomPokemonId, PokemonItem } from '../pages/Guess'
+import {
+  generateRandomPokemonId,
+  PokemonItem,
+  DraggableAndDroppablePokemons,
+} from '../pages/Guess'
 
 type Props = {
   children: JSX.Element | JSX.Element[]
 }
 interface Context {
   state: {
-    pokemons: PokemonItem[]
+    pokemons: DraggableAndDroppablePokemons
     score: number
     isElementDroppedIncorrect: boolean
+    maxDragAndDropElements: number
   }
   actions: {
     getAllPokemonFirstGeneration: () => void
-    addElementDropped: (namePokemon: PokemonItem['name']) => void
+    addElementDropped: (value: PokemonItem) => void
     clearElementsDropped: () => void
     setIsElementDroppedIncorrect: (value: boolean) => void
+    isElementDropped: (pokemonId: number) => boolean
   }
 }
 
 const GuessContext = React.createContext({} as Context)
 
 const GuessProvider: React.FC<Props> = ({ children }) => {
-  const [pokemons, setPokemons] = React.useState<PokemonItem[]>([])
-  const [elementsDropped, setElementsDropped] = React.useState<
-    PokemonItem['name'][]
-  >([])
+  const [pokemons, setPokemons] = React.useState<DraggableAndDroppablePokemons>(
+    () => new Map()
+  )
+  const [elementsDropped, setElementsDropped] =
+    React.useState<DraggableAndDroppablePokemons>(() => new Map())
   const [maxDragAndDropElements, setMaxDragAndDropElements] = React.useState(10)
   const [isElementDroppedIncorrect, setIsElementDroppedIncorrect] =
     React.useState(false)
 
   // Score of game to Drop successfully
-  const score = React.useMemo(() => elementsDropped.length, [elementsDropped])
+  const score = React.useMemo(() => elementsDropped.size, [elementsDropped])
 
   /**
    * Gettting All First Generation of Pokemons
    */
   const getAllPokemonFirstGeneration = React.useCallback(async () => {
-    const searchPokemons: PokemonItem[] = []
-    const pokemonsIdToSearch = new Set<number>()
+    const foundPokemons: DraggableAndDroppablePokemons = new Map()
 
-    // Generate Pokemon IDs uniques to be get the data from api
-    while (pokemonsIdToSearch.size < maxDragAndDropElements) {
+    while (foundPokemons.size < maxDragAndDropElements) {
       const pokemonId = generateRandomPokemonId()
-      pokemonsIdToSearch.add(pokemonId)
-    }
-
-    // We get the pokemon data for drag and drop
-    for (const pokemonId of pokemonsIdToSearch) {
       const pokemon = await getPokemonByIdRequest(pokemonId)
-      searchPokemons.push(pokemon)
+      foundPokemons.set(pokemonId, pokemon)
     }
 
-    // Modifycate el state global
-    setPokemons([...searchPokemons])
+    setPokemons(new Map(foundPokemons))
   }, [pokemons, maxDragAndDropElements])
 
   /**
    * Add a element dropped
    */
   const addElementDropped = React.useCallback(
-    (namePokemon: PokemonItem['name']) => {
-      setElementsDropped([...elementsDropped, namePokemon])
+    (elementDropped: PokemonItem) => {
+      elementsDropped.set(elementDropped.id, elementDropped)
+
+      setElementsDropped(new Map(elementsDropped))
     },
     [elementsDropped]
   )
@@ -70,13 +71,29 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
    * Clear all elements dropped
    */
   const clearElementsDropped = React.useCallback(() => {
-    setElementsDropped([])
+    elementsDropped.clear()
+
+    setElementsDropped(new Map(elementsDropped))
   }, [elementsDropped])
+
+  /**
+   * Determines whether an array includes a certain element,
+   * returning true or false as appropriate.
+   */
+  const isElementDropped = React.useCallback(
+    (pokemonId: number): boolean => elementsDropped.has(pokemonId),
+    [elementsDropped]
+  )
 
   // State global variables
   const state = React.useMemo(
-    () => ({ pokemons, score, isElementDroppedIncorrect }),
-    [pokemons, score, isElementDroppedIncorrect]
+    () => ({
+      pokemons,
+      score,
+      isElementDroppedIncorrect,
+      maxDragAndDropElements,
+    }),
+    [pokemons, score, isElementDroppedIncorrect, maxDragAndDropElements]
   )
 
   // Actions accepted for handle the state
@@ -86,12 +103,14 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       addElementDropped,
       clearElementsDropped,
       setIsElementDroppedIncorrect,
+      isElementDropped,
     }),
     [
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
       setIsElementDroppedIncorrect,
+      isElementDropped,
     ]
   )
 

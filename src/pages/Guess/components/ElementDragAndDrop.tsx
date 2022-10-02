@@ -8,12 +8,24 @@ interface Props {
 }
 
 const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
-  const [{}, { addElementDropped, setIsElementDroppedIncorrect }] = useGuess()
+  const [
+    {},
+    { addElementDropped, setIsElementDroppedIncorrect, isElementDropped },
+  ] = useGuess()
   const [droppedSuccess, setDroppedSuccess] = useState(false)
 
   const handleDragStart = (e: DragEvent<HTMLImageElement>) => {
     e.dataTransfer.effectAllowed = 'copyLink'
     e.dataTransfer.setData('text/plain', pokemon.name)
+  }
+
+  const handleDragEnd = (e: DragEvent<HTMLImageElement>) => {
+    e.preventDefault()
+
+    const isDropSuccess = isElementDropped(pokemon.id)
+    setDroppedSuccess(isDropSuccess)
+
+    e.stopPropagation()
   }
 
   const handleDragOver = (e: DragEvent<HTMLParagraphElement>) => {
@@ -27,7 +39,7 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
     const draggableElementData = e.dataTransfer.getData('text/plain')
     const isDropSuccess = pokemon.name === draggableElementData
     if (isDropSuccess) {
-      addElementDropped(pokemon.name)
+      addElementDropped(pokemon)
       setIsElementDroppedIncorrect(false)
     } else {
       setIsElementDroppedIncorrect(true)
@@ -58,9 +70,10 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
       <img
         src={pokemon.image}
         alt={pokemon.name}
-        className={`w-28 h-28 ${droppedSuccess && 'opacity-40'}`}
-        draggable
+        className={`w-28 h-28 ${droppedSuccess ? 'opacity-0' : ''}`}
+        draggable={!droppedSuccess}
         onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       />
     </div>
   )

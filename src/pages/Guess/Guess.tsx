@@ -5,7 +5,7 @@ import { DraggableElements, DroppableElements } from './components'
 
 function Guess() {
   const [
-    { pokemons, score, isElementDroppedIncorrect },
+    { pokemons, score, isElementDroppedIncorrect, maxDragAndDropElements },
     { getAllPokemonFirstGeneration },
   ] = useGuess()
 
@@ -16,7 +16,11 @@ function Guess() {
   return (
     <>
       <h1 className='text-center text-2xl'>Adivina el pokemon!</h1>
-      <DraggableElements pokemons={pokemons} score={score} />
+      <DraggableElements
+        pokemons={pokemons}
+        score={score}
+        maxDragggableElements={maxDragAndDropElements}
+      />
 
       <h2 className='text-center text-xl'>Arrastra y suelta</h2>
       {isElementDroppedIncorrect && (
