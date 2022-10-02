@@ -22,19 +22,33 @@ interface Context {
     clearElementsDropped: () => void
     setFailedElementDropped: (value: boolean) => void
     isElementDropped: (pokemonId: number) => boolean
+    resetGame: () => void
   }
+}
+
+const initialState = {
+  pokemons: () => new Map(),
+  elementsDropped: () => new Map(),
+  maxDragAndDropElements: 10,
+  failedElementDropped: false,
 }
 
 const GuessContext = React.createContext({} as Context)
 
 const GuessProvider: React.FC<Props> = ({ children }) => {
   const [pokemons, setPokemons] = React.useState<DraggableAndDroppablePokemons>(
-    () => new Map()
+    () => initialState.pokemons()
   )
   const [elementsDropped, setElementsDropped] =
-    React.useState<DraggableAndDroppablePokemons>(() => new Map())
-  const [maxDragAndDropElements, setMaxDragAndDropElements] = React.useState(10)
-  const [failedElementDropped, setFailedElementDropped] = React.useState(false)
+    React.useState<DraggableAndDroppablePokemons>(() =>
+      initialState.elementsDropped()
+    )
+  const [maxDragAndDropElements, setMaxDragAndDropElements] = React.useState(
+    initialState.maxDragAndDropElements
+  )
+  const [failedElementDropped, setFailedElementDropped] = React.useState(
+    initialState.failedElementDropped
+  )
 
   // Score of game to Drop successfully
   const score = React.useMemo(() => elementsDropped.size, [elementsDropped])
@@ -84,6 +98,14 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     [elementsDropped]
   )
 
+  /**
+   * Reset the game and continue gaming
+   */
+  const resetGame = React.useCallback(() => {
+    getAllPokemonFirstGeneration()
+    clearElementsDropped()
+  }, [pokemons, elementsDropped])
+
   // State global variables
   const state = React.useMemo(
     () => ({
@@ -103,6 +125,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       clearElementsDropped,
       setFailedElementDropped,
       isElementDropped,
+      resetGame,
     }),
     [
       getAllPokemonFirstGeneration,
@@ -110,6 +133,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       clearElementsDropped,
       setFailedElementDropped,
       isElementDropped,
+      resetGame,
     ]
   )
 
