@@ -1,14 +1,10 @@
 import * as React from 'react'
-import {
-  generateRandomPokemonId,
-  getPokemonById,
-  PokemonItem,
-} from '../pages/Guess'
+import { getPokemonByIdRequest } from '../api'
+import { generateRandomPokemonId, PokemonItem } from '../pages/Guess'
 
 type Props = {
   children: JSX.Element | JSX.Element[]
 }
-
 interface Context {
   state: {
     pokemons: PokemonItem[]
@@ -52,7 +48,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
 
     // We get the pokemon data for drag and drop
     for (const pokemonId of pokemonsIdToSearch) {
-      const pokemon = await getPokemonById(pokemonId)
+      const pokemon = await getPokemonByIdRequest(pokemonId)
       searchPokemons.push(pokemon)
     }
 
