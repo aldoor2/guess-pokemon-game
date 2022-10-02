@@ -8,10 +8,8 @@ interface Props {
 }
 
 const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
-  const [
-    {},
-    { addElementDropped, setIsElementDroppedIncorrect, isElementDropped },
-  ] = useGuess()
+  const [{}, { addElementDropped, setFailedElementDropped, isElementDropped }] =
+    useGuess()
   const [droppedSuccess, setDroppedSuccess] = useState(false)
 
   const handleDragStart = (e: DragEvent<HTMLImageElement>) => {
@@ -40,9 +38,9 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
     const isDropSuccess = pokemon.name === draggableElementData
     if (isDropSuccess) {
       addElementDropped(pokemon)
-      setIsElementDroppedIncorrect(false)
+      setFailedElementDropped(false)
     } else {
-      setIsElementDroppedIncorrect(true)
+      setFailedElementDropped(true)
     }
     setDroppedSuccess(isDropSuccess)
   }

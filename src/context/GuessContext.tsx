@@ -13,14 +13,14 @@ interface Context {
   state: {
     pokemons: DraggableAndDroppablePokemons
     score: number
-    isElementDroppedIncorrect: boolean
+    failedElementDropped: boolean
     maxDragAndDropElements: number
   }
   actions: {
     getAllPokemonFirstGeneration: () => void
     addElementDropped: (value: PokemonItem) => void
     clearElementsDropped: () => void
-    setIsElementDroppedIncorrect: (value: boolean) => void
+    setFailedElementDropped: (value: boolean) => void
     isElementDropped: (pokemonId: number) => boolean
   }
 }
@@ -34,8 +34,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
   const [elementsDropped, setElementsDropped] =
     React.useState<DraggableAndDroppablePokemons>(() => new Map())
   const [maxDragAndDropElements, setMaxDragAndDropElements] = React.useState(10)
-  const [isElementDroppedIncorrect, setIsElementDroppedIncorrect] =
-    React.useState(false)
+  const [failedElementDropped, setFailedElementDropped] = React.useState(false)
 
   // Score of game to Drop successfully
   const score = React.useMemo(() => elementsDropped.size, [elementsDropped])
@@ -90,10 +89,10 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     () => ({
       pokemons,
       score,
-      isElementDroppedIncorrect,
+      failedElementDropped,
       maxDragAndDropElements,
     }),
-    [pokemons, score, isElementDroppedIncorrect, maxDragAndDropElements]
+    [pokemons, score, failedElementDropped, maxDragAndDropElements]
   )
 
   // Actions accepted for handle the state
@@ -102,14 +101,14 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
-      setIsElementDroppedIncorrect,
+      setFailedElementDropped,
       isElementDropped,
     }),
     [
       getAllPokemonFirstGeneration,
       addElementDropped,
       clearElementsDropped,
-      setIsElementDroppedIncorrect,
+      setFailedElementDropped,
       isElementDropped,
     ]
   )
