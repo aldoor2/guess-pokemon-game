@@ -20,6 +20,6 @@ export const getPokemonByIdRequest = async (
 
     return pokemon
   } catch (error) {
-    return { id: '', name: '', image: '' } as PokemonItem
+    return { id: 0, name: '', image: '' } as PokemonItem
   }
 }
