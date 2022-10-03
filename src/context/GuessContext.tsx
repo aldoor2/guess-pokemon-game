@@ -22,7 +22,6 @@ interface Context {
     clearElementsDropped: () => void
     setFailedElementDropped: (value: boolean) => void
     isElementDropped: (pokemonId: number) => boolean
-    resetGame: () => void
   }
 }
 
@@ -98,14 +97,6 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
     [elementsDropped]
   )
 
-  /**
-   * Reset the game and continue gaming
-   */
-  const resetGame = React.useCallback(() => {
-    getAllPokemonFirstGeneration()
-    clearElementsDropped()
-  }, [pokemons, elementsDropped])
-
   // State global variables
   const state = React.useMemo(
     () => ({
@@ -125,7 +116,6 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       clearElementsDropped,
       setFailedElementDropped,
       isElementDropped,
-      resetGame,
     }),
     [
       getAllPokemonFirstGeneration,
@@ -133,7 +123,6 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
       clearElementsDropped,
       setFailedElementDropped,
       isElementDropped,
-      resetGame,
     ]
   )
 

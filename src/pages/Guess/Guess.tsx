@@ -6,11 +6,19 @@ import { DraggableElements, DroppableElements } from './components'
 function Guess() {
   const [
     { pokemons, score, failedElementDropped, maxDragAndDropElements },
-    { getAllPokemonFirstGeneration, resetGame },
+    { getAllPokemonFirstGeneration, clearElementsDropped },
   ] = useGuess()
 
-  React.useEffect(() => {
+  /**
+   * Start the game
+   */
+  const startGame = () => {
+    clearElementsDropped()
     getAllPokemonFirstGeneration()
+  }
+
+  React.useEffect(() => {
+    startGame()
   }, [])
 
   return (
@@ -20,7 +28,7 @@ function Guess() {
         pokemons={pokemons}
         score={score}
         maxDragggableElements={maxDragAndDropElements}
-        resetGame={resetGame}
+        resetGame={startGame}
       />
 
       <h2 className='text-center text-xl'>Arrastra y suelta</h2>
