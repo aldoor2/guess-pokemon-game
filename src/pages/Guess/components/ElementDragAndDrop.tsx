@@ -45,6 +45,11 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
     setDroppedSuccess(isDropSuccess)
   }
 
+  React.useEffect(() => {
+    const isDroppped = isElementDropped(pokemon.id)
+    setDroppedSuccess(isDroppped)
+  }, [pokemon])
+
   if (onlyName) {
     return (
       <div
