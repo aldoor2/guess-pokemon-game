@@ -20,8 +20,8 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
   const handleDragEnd = (e: DragEvent<HTMLImageElement>) => {
     e.preventDefault()
 
-    const isDropSuccess = isElementDropped(pokemon.id)
-    setDroppedSuccess(isDropSuccess)
+    const isDroppped = isElementDropped(pokemon.id)
+    setDroppedSuccess(isDroppped)
 
     e.stopPropagation()
   }
@@ -48,9 +48,13 @@ const ElementDragAndDrop: React.FC<Props> = ({ onlyName, pokemon }) => {
   if (onlyName) {
     return (
       <div
-        className={`border-4 border-dashed border-orange-700 w-fit h-24 px-2.5 grid place-content-center`}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
+        className={`border-4 ${
+          !droppedSuccess
+            ? 'border-dashed border-orange-700'
+            : 'border-solid border-orange-800'
+        } w-fit h-24 px-2.5 grid place-content-center`}
+        onDragOver={(e) => (!droppedSuccess ? handleDragOver(e) : null)}
+        onDrop={(e) => (!droppedSuccess ? handleDrop(e) : null)}
       >
         {droppedSuccess ? (
           <img src={pokemon.image} alt={pokemon.name} className='w-24 h-24' />
