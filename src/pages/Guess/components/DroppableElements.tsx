@@ -1,26 +1,35 @@
 import React from 'react'
 import { DraggableAndDroppablePokemons } from '../types'
-import { generateRandomNumber } from '../utils'
+import { generateAllRandomNumbersOfMap } from '../utils'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
 interface Props {
   pokemons: DraggableAndDroppablePokemons
 }
 
-let numberRandom = generateRandomNumber()
-
 const DroppableElements: React.FC<Props> = ({ pokemons }) => {
+  const [randomNumbers, setRandomNumbers] = React.useState(
+    new Map<number, number>()
+  )
+
+  const getNumbersRandom = async () => {
+    const numbers = await generateAllRandomNumbersOfMap(pokemons)
+    setRandomNumbers(numbers)
+  }
+
   React.useEffect(() => {
-    numberRandom = generateRandomNumber()
-  }, [])
+    ;(async () => {
+      await getNumbersRandom()
+    })()
+  }, [pokemons])
 
   return (
-    <div className='flex flex-wrap justify-around gap-2.5 h-min p-6'>
-      {Array.from(pokemons.entries())
-        .map(([id, pokemon]) => (
-          <ElementDragAndDrop key={id} onlyName pokemon={pokemon} />
-        ))
-        .sort(() => numberRandom)}
+    <div className='flex flex-wrap justify-around gap-2.5 min-h-min p-6'>
+      {Array.from(pokemons.values())
+        .sort((a, b) => randomNumbers.get(a.id) as number)
+        .map((pokemon) => (
+          <ElementDragAndDrop key={pokemon.id} onlyName pokemon={pokemon} />
+        ))}
     </div>
   )
 }
