@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useGuess } from '../../context/GuessContext'
+import { useGuess } from '@/context/GuessContext'
 import { DraggableElements, DroppableElements } from './components'
 
 function Guess() {

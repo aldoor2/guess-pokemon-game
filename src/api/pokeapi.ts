@@ -1,4 +1,4 @@
-import { PokemonItem } from '../pages/Guess'
+import { PokemonItem } from '@/pages'
 
 /**
  * Getting a Pokemon by Id or Name

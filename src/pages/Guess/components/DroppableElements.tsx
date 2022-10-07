@@ -1,6 +1,6 @@
 import React from 'react'
-import { DraggableAndDroppablePokemons } from '../types'
-import { generateAllRandomNumbersOfMap } from '../utils'
+import type { DraggableAndDroppablePokemons } from '@/pages/Guess'
+import { generateAllRandomNumbersOfMap } from '@/pages/Guess'
 import ElementDragAndDrop from './ElementDragAndDrop'
 
 interface Props {

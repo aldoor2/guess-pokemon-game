@@ -1,5 +1,5 @@
 import React from 'react'
-import { DraggableAndDroppablePokemons } from '../types'
+import type { DraggableAndDroppablePokemons } from '@/pages/Guess'
 import ElementDragAndDrop from './ElementDragAndDrop'
 interface Props {
   pokemons: DraggableAndDroppablePokemons

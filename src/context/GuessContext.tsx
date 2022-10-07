@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { getPokemonByIdRequest } from '../api'
+import { getPokemonByIdRequest } from '@/api'
 import {
   generateRandomPokemonId,
   PokemonItem,
   DraggableAndDroppablePokemons,
-} from '../pages/Guess'
+} from '@/pages'
 
 type Props = {
   children: JSX.Element | JSX.Element[]

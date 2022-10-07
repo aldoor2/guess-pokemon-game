@@ -1,6 +1,6 @@
 import './App.css'
-import GuessProvider from './context/GuessContext'
-import { Guess } from './pages/Guess'
+import GuessProvider from '@/context/GuessContext'
+import { Guess } from '@/pages'
 
 function App() {
   return (

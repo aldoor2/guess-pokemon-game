@@ -1,6 +1,6 @@
 import React, { DragEvent, useState } from 'react'
-import { useGuess } from '../../../context/GuessContext'
-import { PokemonItem } from '../types'
+import { useGuess } from '@/context/GuessContext'
+import { PokemonItem } from '@/pages/Guess'
 
 interface Props {
   onlyName?: boolean
