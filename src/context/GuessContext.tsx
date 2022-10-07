@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { getPokemonByIdRequest } from '@/api'
+import { getOnePokemonRequest } from '@/api'
 import {
   generateRandomPokemonId,
   PokemonItem,
@@ -60,7 +60,7 @@ const GuessProvider: React.FC<Props> = ({ children }) => {
 
     while (foundPokemons.size < maxDragAndDropElements) {
       const pokemonId = generateRandomPokemonId()
-      const pokemon = await getPokemonByIdRequest(pokemonId)
+      const pokemon = await getOnePokemonRequest(pokemonId)
       foundPokemons.set(pokemonId, pokemon)
     }
 
