@@ -4,6 +4,7 @@ import * as path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: 'https://aldoor2.github.io/guess-pokemon-game/',
   plugins: [react()],
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
